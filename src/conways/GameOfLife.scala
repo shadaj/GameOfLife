@@ -3,20 +3,23 @@ package conways
 import scala.collection._
 
 object GameOfLife {
-  def init(x: Int, y: Int, trues: (Int, Int)*) = {
-    val grid = mutable.IndexedSeq.fill(x, y)(false)
-    trues.foreach { case (a, b) => grid(a)(b) = true }
-    grid
+  def init(x: Int, y: Int) = {
+    mutable.IndexedSeq.fill(x, y)(false)
   }
 
-  def liveNeighborsCount(coordinates: (Int, Int), size: (Int, Int), grid: mutable.IndexedSeq[mutable.IndexedSeq[Boolean]]) = {
-    val possicoordinates = for (
-      i <- coordinates._1 - 1 to coordinates._1 + 1;
-      j <- coordinates._2 - 1 to coordinates._2 + 1 if ((i, j) != coordinates)
+  def liveNeighborsCount(coordinate: (Int, Int), size: (Int, Int), grid: mutable.IndexedSeq[mutable.IndexedSeq[Boolean]]) = {
+    val possibleCoordinatesOfNeighbors = for (
+      i <- coordinate._1 - 1 to coordinate._1 + 1;
+      j <- coordinate._2 - 1 to coordinate._2 + 1 if ((i, j) != coordinate)
     ) yield (i, j)
-    possicoordinates.filter { c =>
-      c._1 >= 0 && c._2 >= 0 && c._1 < size._1 && c._2 < size._2 && grid(c._1)(c._2)
+
+    possibleCoordinatesOfNeighbors.filter { neighborCoordinate =>
+      inGrid(neighborCoordinate, size) && grid(neighborCoordinate._1)(neighborCoordinate._2)
     }.size
+  }
+
+  def inGrid(coordinate: (Int, Int), gridSize: (Int, Int)): Boolean = {
+    coordinate._1 >= 0 && coordinate._2 >= 0 && coordinate._1 < gridSize._1 && coordinate._2 < gridSize._2
   }
 
   def nextGrid(grid: mutable.IndexedSeq[mutable.IndexedSeq[Boolean]]) = {
