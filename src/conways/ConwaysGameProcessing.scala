@@ -28,6 +28,7 @@ class ConwaysGame extends PApplet {
   val boxThickness = screenSize / gridSize
 
   override def setup() = {
+    frameRate(5)
     size(screenSize, screenSize)
     background(0)
   }
@@ -48,9 +49,6 @@ class ConwaysGame extends PApplet {
       }
     }
   }
-  override def keyPressed(e: KeyEvent) {
-    started = true
-  }
 
   override def mouseDragged(e: MouseEvent) {
     if (!started) {
@@ -61,5 +59,9 @@ class ConwaysGame extends PApplet {
         current(y / boxThickness)(x / boxThickness) = true
       }
     }
+  }
+  
+  override def keyPressed(e: KeyEvent) {
+    started = true
   }
 }
