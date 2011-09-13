@@ -3,8 +3,8 @@ package conways
 import scala.collection._
 
 object GameOfLife {
-  def init(x: Int, y: Int) = {
-    mutable.IndexedSeq.fill(x, y)(false)
+  def init(width: Int, height: Int) = {
+    mutable.IndexedSeq.fill(width, height)(false)
   }
 
   def liveNeighborsCount(coordinate: (Int, Int), size: (Int, Int), grid: mutable.IndexedSeq[mutable.IndexedSeq[Boolean]]) = {
