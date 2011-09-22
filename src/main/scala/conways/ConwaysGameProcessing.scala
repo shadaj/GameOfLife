@@ -4,17 +4,15 @@ import processing.core._
 import java.awt.event._
 import javax.swing.JFrame
 
-object ConwaysGameProcessing extends PApplet {
-  def main(args: Array[String]) {
-    val game = new ConwaysGame
-    val frame = new JFrame("Conway's Game of Life")
-    frame.getContentPane().add(game)
-    game.init
+object ConwaysGameProcessing extends App {
+  val game = new ConwaysGame
+  val frame = new JFrame("Conway's Game of Life")
+  frame.getContentPane().add(game)
+  game.init
 
-    frame.pack
-    frame.setVisible(true)
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-  }
+  frame.pack
+  frame.setVisible(true)
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 }
 
 class ConwaysGame extends PApplet {
