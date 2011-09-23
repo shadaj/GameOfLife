@@ -1,0 +1,16 @@
+apply plugin:'scala'
+apply plugin:'application'
+defaultTasks 'run'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  flatDir name:'lib', dirs:'lib'
+}
+
+dependencies {
+  scalaTools 'org.scala-lang:scala-compiler:2.9.1', 'org.scala-lang:scala-library:2.9.1'
+  compile 'org.scala-lang:scala-library:2.9.1', 'lib:core:1.5.1'
+}
+
+mainClassName='conways.ConwaysGameProcessing'
