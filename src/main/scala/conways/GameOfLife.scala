@@ -3,43 +3,25 @@ package conways
 import scala.collection._
 
 object GameOfLife {
-  def init(width: Int, height: Int) = {
-    mutable.IndexedSeq.fill(width, height)(false)
-  }
+  def nextGrid(grid: Grid) = {
+    val newgrid = new Grid(grid.width, grid.length)
+    
+    for (y <- 0 until grid.length; x <- 0 until grid.width) {
+      val numofneighbors = grid.liveNeighbors(new Cell(x, y)).size
+      val curcell = grid(x, y)
 
-  def liveNeighborsCount(coordinate: (Int, Int), size: (Int, Int), grid: mutable.IndexedSeq[mutable.IndexedSeq[Boolean]]) = {
-    val possibleCoordinatesOfNeighbors = for (
-      i <- coordinate._1 - 1 to coordinate._1 + 1;
-      j <- coordinate._2 - 1 to coordinate._2 + 1 if ((i, j) != coordinate)
-    ) yield (i, j)
-
-    possibleCoordinatesOfNeighbors.filter { neighborCoordinate =>
-      inGrid(neighborCoordinate, size) && grid(neighborCoordinate._1)(neighborCoordinate._2)
-    }.size
-  }
-
-  def inGrid(coordinate: (Int, Int), gridSize: (Int, Int)): Boolean = {
-    coordinate._1 >= 0 && coordinate._2 >= 0 && coordinate._1 < gridSize._1 && coordinate._2 < gridSize._2
-  }
-
-  def nextGrid(grid: mutable.IndexedSeq[mutable.IndexedSeq[Boolean]]) = {
-    val newgrid = init(grid.size, grid(0).size)
-    for (y <- 0 until grid.size; x <- 0 until grid(0).size) {
-      val numofneighbors = liveNeighborsCount((y, x), (grid.size, grid(0).size), grid)
-      val curcell = grid(y)(x)
-      
       if (numofneighbors < 2) {
         // If a cell is alive but has fewer than 2 live neighbors, it dies of loneliness.
-        newgrid(y)(x) = false
+        newgrid(x,y) = false
       } else if (numofneighbors > 3) {
         // If a cell is alive but has more than 3 live neighbors, it dies of overcrowding.
-        newgrid(y)(x) = false
+        newgrid(x,y) = false
       } else if (curcell && (numofneighbors == 3 || numofneighbors == 2)) {
         // If a cell is alive and has exactly 2 or 3 live neighbors, it stays alive.
-        newgrid(y)(x) = true
+        newgrid(x,y) = true
       } else if (numofneighbors == 3) {
         // If a cell is dead but has exactly 3 live neighbors, it springs to life.
-        newgrid(y)(x) = true
+        newgrid(x,y) = true
       }
     }
     newgrid

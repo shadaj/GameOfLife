@@ -21,7 +21,7 @@ class ConwaysGame extends PApplet {
   val gridSize = 20
   val screenSize = 1000
 
-  var current = GameOfLife.init(gridSize, gridSize)
+  var current = new Grid(gridSize, gridSize)
   var started = false
   val boxThickness = screenSize / gridSize
 
@@ -41,7 +41,7 @@ class ConwaysGame extends PApplet {
   def drawGrid() {
     background(0)
     for (y <- 0 until gridSize; x <- 0 until gridSize) {
-      if (current(y)(x)) {
+      if (current(x, y)) {
         fill(white)
         rect(x * boxThickness, y * boxThickness, boxThickness, boxThickness)
       }
@@ -52,13 +52,13 @@ class ConwaysGame extends PApplet {
     if (!started) {
       val y = e.getY()
       val x = e.getX()
-      val roundedCoordinates = (x / boxThickness, y / boxThickness)
-      if (GameOfLife.inGrid(roundedCoordinates, (gridSize, gridSize))) {
-        current(y / boxThickness)(x / boxThickness) = true
+      val roundedCoordinates = new Cell(x / boxThickness, y / boxThickness)
+      if (current.inGrid(roundedCoordinates)) {
+        current(x / boxThickness, y / boxThickness) = true
       }
     }
   }
-  
+
   override def keyPressed(e: KeyEvent) {
     started = true
   }

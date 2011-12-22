@@ -7,20 +7,27 @@ class Grid(val width: Int, val length: Int) {
     grid(y)(x)
   }
   
-  val grid = mutable.IndexedSeq.fill(width, length)(false)
-  
-  def inGrid(coordinate: (Int, Int)): Boolean = {
-    coordinate._1 >= 0 && coordinate._2 >= 0 && coordinate._1 < width && coordinate._2 < length
+  def update(x: Int, y: Int, value: Boolean) {
+    grid(y)(x) = value
   }
   
-  def liveNeighbors(coordinate: (Int, Int)) = {
+  private val grid = mutable.IndexedSeq.fill(width, length)(false)
+  
+  def inGrid(coordinate: Cell): Boolean = {
+    coordinate.x >= 0 && coordinate.y >= 0 && coordinate.x < width && coordinate.y < length
+  }
+  
+  def liveNeighbors(coordinate: Cell) = {
     val possibleCoordinatesOfNeighbors = for (
-      i <- coordinate._1 - 1 to coordinate._1 + 1;
-      j <- coordinate._2 - 1 to coordinate._2 + 1 if ((i, j) != coordinate)
-    ) yield (i, j)
+      x <- coordinate.x - 1 to coordinate.x + 1;
+      y <- coordinate.y - 1 to coordinate.y + 1 if (new Cell(x, y) != coordinate)
+    ) yield new Cell(x, y)
 
     possibleCoordinatesOfNeighbors.filter { neighborCoordinate =>
-      inGrid(neighborCoordinate) && grid(neighborCoordinate._1)(neighborCoordinate._2)
+      inGrid(neighborCoordinate) && this(neighborCoordinate.x,neighborCoordinate.y)
     }
   }
 }
+
+
+case class Cell(val x: Int, val y: Int)
