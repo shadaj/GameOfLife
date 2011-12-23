@@ -18,12 +18,12 @@ object ConwaysGameProcessing extends App {
 class ConwaysGame extends PApplet {
   val black = 0
   val white = 255
-  val gridSize = 20
   val screenSize = 1000
 
-  var current = new Grid(gridSize, gridSize)
+  var current = new Grid(20,20)
   var started = false
-  val boxThickness = screenSize / gridSize
+  var boxThicknessX = screenSize / current.width
+  var boxThicknessY = screenSize / current.height
 
   override def setup() = {
     frameRate(5)
@@ -31,7 +31,7 @@ class ConwaysGame extends PApplet {
     background(0)
   }
 
-  override def draw() = {
+  override def draw() {
     if (started) {
       current = GameOfLife.nextGrid(current)
     }
@@ -39,11 +39,13 @@ class ConwaysGame extends PApplet {
   }
 
   def drawGrid() {
+    boxThicknessX = screenSize / current.width
+    boxThicknessY = screenSize / current.height
     background(0)
-    for (y <- 0 until gridSize; x <- 0 until gridSize) {
+    for (y <- 0 until current.height; x <- 0 until current.width) {
       if (current(x, y)) {
         fill(white)
-        rect(x * boxThickness, y * boxThickness, boxThickness, boxThickness)
+        rect(x * boxThicknessX, y * boxThicknessY, boxThicknessX, boxThicknessY)
       }
     }
   }
@@ -52,9 +54,9 @@ class ConwaysGame extends PApplet {
     if (!started) {
       val y = e.getY()
       val x = e.getX()
-      val roundedCoordinates = new Cell(x / boxThickness, y / boxThickness)
+      val roundedCoordinates = new Cell(x / boxThicknessX, y / boxThicknessY)
       if (current.inGrid(roundedCoordinates)) {
-        current(x / boxThickness, y / boxThickness) = true
+        current(x / boxThicknessX, y / boxThicknessY) = true
       }
     }
   }
