@@ -2,58 +2,39 @@ package conways
 
 import scala.collection.mutable
 
-class Grid(minWidth: Int, minHeight: Int) {
-  private var liveCells = mutable.IndexedSeq[Cell]()
-
+class Grid(minSize: Int) {
+  var liveCells = mutable.IndexedSeq[Cell]()
   
-  def apply(x: Int, y: Int) = {
-    liveCells.contains(Cell(x,y))
+  def apply(c: Cell) = {
+    liveCells.contains(c)
   }
   
-  def update(x: Int, y: Int, value: Boolean) {
+  def update(c: Cell, value: Boolean) {
     if (value) {
-      if (!this(x,y)) {
-        liveCells = liveCells :+ Cell(x,y)
+      if (!this(c)) {
+        liveCells = liveCells :+ c
       }
     } else {
-      liveCells = liveCells.filter(_ != Cell(x,y))
+      liveCells = liveCells.filter(_ != c)
     }
   }
   
-  def width = {
+  def size = {
     val gridWidth = if (liveCells.isEmpty) 0 else liveCells.map(_.x).max + 1
-    gridWidth max minWidth
-  }
-  
-  def height = {
+    val width = gridWidth max minSize
     val gridHeight = if (liveCells.isEmpty) 0 else liveCells.map(_.y).max + 1
-    gridHeight max minHeight
+    val height = gridHeight max minSize
+    width max height
   }
-  
   
   def fit {
     val xMin = liveCells.map(_.x).min
     val yMin = liveCells.map(_.y).min
-    if (xMin < 0) {
-      liveCells = liveCells.map(e => Cell(e.x - xMin, e.y))
+    if (xMin < 0 || yMin < 0) {
+      liveCells = liveCells.map(e => Cell(e.x - xMin, e.y - yMin))
     }
-    if (yMin < 0) {
-      liveCells = liveCells.map(e => Cell(e.x, e.y - yMin))
-    }
-  }
-  
-  def inGrid(coordinate: Cell): Boolean = {
-    coordinate.x >= 0 && coordinate.y >= 0 && coordinate.x < width && coordinate.y < height
-  }
-  
-  def liveNeighbors(coordinate: Cell) = {
-    val possibleCoordinatesOfNeighbors = for (
-      x <- coordinate.x - 1 to coordinate.x + 1;
-      y <- coordinate.y - 1 to coordinate.y + 1 if (Cell(x, y) != coordinate)
-    ) yield Cell(x, y)
-
-    possibleCoordinatesOfNeighbors.filter { neighborCoordinate =>
-      this(neighborCoordinate.x,neighborCoordinate.y)
+    if ((xMin > 0 || yMin > 0) && size > minSize) {
+      liveCells = liveCells.map(e => Cell(e.x - (xMin - 1), e.y - (yMin - 1)))
     }
   }
 }
