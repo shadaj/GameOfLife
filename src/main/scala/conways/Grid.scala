@@ -28,13 +28,15 @@ class Grid(minSize: Int) {
   }
   
   def fit {
-    val xMin = liveCells.map(_.x).min
-    val yMin = liveCells.map(_.y).min
-    if (xMin < 0 || yMin < 0) {
-      liveCells = liveCells.map(e => Cell(e.x - xMin, e.y - yMin))
-    }
-    if ((xMin > 0 || yMin > 0) && size > minSize) {
-      liveCells = liveCells.map(e => Cell(e.x - (xMin - 1), e.y - (yMin - 1)))
+    if (!liveCells.isEmpty) {
+	    val xMin = liveCells.map(_.x).min
+	    val yMin = liveCells.map(_.y).min
+	    if (xMin < 0 || yMin < 0) {
+	      liveCells = liveCells.map(e => Cell(e.x - xMin, e.y - yMin))
+	    }
+	    if ((xMin > 0 || yMin > 0) && size > minSize) {
+	      liveCells = liveCells.map(e => Cell(e.x - (xMin - 1), e.y - (yMin - 1)))
+	    }
     }
   }
 }

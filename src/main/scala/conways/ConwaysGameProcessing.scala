@@ -18,14 +18,14 @@ object ConwaysGameProcessing extends App {
 class ConwaysGame extends PApplet {
   val black = 0
   val white = 255
-  val screenSize = 1000
+  val screenSize = 500
 
   var current = new Grid(20)
   var started = false
-  var boxThickness = screenSize / current.size
+  def boxThickness = screenSize / current.size
 
   override def setup() = {
-    frameRate(10)
+    frameRate(20)
     size(screenSize, screenSize)
     background(0)
   }
@@ -38,7 +38,6 @@ class ConwaysGame extends PApplet {
   }
 
   def drawGrid() {
-    boxThickness = screenSize / current.size
     background(0)
     current.liveCells.foreach {c =>
       fill(white)
@@ -57,6 +56,6 @@ class ConwaysGame extends PApplet {
   }
 
   override def keyPressed(e: KeyEvent) {
-    started = true
+    started = !started
   }
 }
